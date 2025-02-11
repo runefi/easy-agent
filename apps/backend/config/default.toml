@@ -1,0 +1,10 @@
+# only openrouter now
+[model]
+api_key = ""
+name = "deepseek/deepseek-chat"
+
+[langfuse]
+enabled = false
+secretKey = ""
+publicKey = ""
+baseUrl = ""

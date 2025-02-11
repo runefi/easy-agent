@@ -1,0 +1,18 @@
+{
+	"folders": [
+    {
+      "path": "./"
+    },
+    {
+      "name": "lib",
+      "path": "./packages/lib"
+    },
+    {
+      "name": "pyth-fetcher",
+      "path": "./packages/agents/pyth-fetcher"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "pyth-fetcher/node_modules/typescript/lib"
+  },
+}
