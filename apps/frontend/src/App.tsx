@@ -1,22 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import TextareaAutosize from "react-textarea-autosize";
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-  useSidebar,
-} from "./components/ui/sidebar";
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "@/components/ui/sidebar";
 import clsx from "clsx";
 import { useChat } from "@ai-sdk/react";
 import { UIMessage } from "@ai-sdk/ui-utils";
