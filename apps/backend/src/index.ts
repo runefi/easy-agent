@@ -6,7 +6,6 @@ import { serve } from '@hono/node-server';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import c = require('config');
 import { PythFetcherAgent } from '@easyagent/pyth-fetcher';
-import { LogMiddleware } from './llm_logger';
 import { config } from 'dotenv';
 import { LangfuseExporter } from 'langfuse-vercel';
 import { NodeSDK } from '@opentelemetry/sdk-node';
@@ -21,10 +20,7 @@ const openrouter = createOpenRouter({
   apiKey: c.get('model.api_key'),
 })
 
-let model = wrapLanguageModel({
-  model: openrouter.chat(c.get('model.name')),
-  middleware: LogMiddleware
-})
+let model = openrouter.chat(c.get('model.name'))
 
 let sdk: NodeSDK | undefined;
 if (c.get('langfuse.enabled')) {

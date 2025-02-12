@@ -1,6 +1,16 @@
 # EasyAgent
 
-EasyAgent是一个简单而又强大的Agent框架。
+EasyAgent是一个简单而又强大的Agent框架。该框架主要是用于演示用途，并且以工程化形式展现。
+
+路线图：  
+- [x] ChatBot的开发  
+- [x] Tool的调用  
+- [ ] Session功能和持久储存  
+- [ ] Prompt的管理，选择  
+- [ ] Memory功能  
+- [ ] RAG数据功能  
+- [ ] 多Agent合作  
+- [ ] Swarm，Agent调度  
 
 ## 准备工作
 你需要准备。
