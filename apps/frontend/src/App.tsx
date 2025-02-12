@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@easyagent/ui/components/button";
 import TextareaAutosize from "react-textarea-autosize";
 import clsx from "clsx";
 import { useChat } from "@ai-sdk/react";
@@ -14,9 +14,9 @@ export default function App() {
   });
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
+    <div className="flex flex-1 flex-col gap-4 p-4 min-h-screen">
       {/* Message display area */}
-      <div className="flex-1 p-8 container flex flex-col">
+      <div className="flex-1 p-8 container flex flex-col mx-auto">
         <MessageList messages={messages} />
       </div>
 
@@ -29,7 +29,7 @@ export default function App() {
             value={input}
             onChange={handleInputChange}
           />
-          <Button>Send</Button>
+          <Button type="submit">Send</Button>
         </form>
       </div>
     </div>

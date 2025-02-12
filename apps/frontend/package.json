@@ -30,7 +30,9 @@
     "react-textarea-autosize": "^8.5.7",
     "tailwind-merge": "^3.0.1",
     "tailwindcss": "3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "@easyagent/ui": "workspace:*",
+    "@easyagent/lib": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

@@ -6,7 +6,8 @@
     "dev": "turbo dev",
     "start": "turbo start",
     "lint": "turbo lint",
-    "clean": "turbo clean && rm -rf node_modules"
+    "clean": "turbo clean && rm -rf node_modules",
+    "ui:add": "pnpm --filter @easyagent/ui ui:add"
   },
   "devDependencies": {
     "turbo": "latest"

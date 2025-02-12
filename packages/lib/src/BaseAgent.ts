@@ -46,7 +46,7 @@ export abstract class BaseAgent {
 
     // Filter for methods that are marked as actions
     for (const [name, { description, parametersSchema, method }] of actions.entries()) {
-      if (typeof method === 'function' && method._isAction) {
+      if (typeof method === 'function') {
         tools[`${this.name}-${name}`] = tool({
           description,
           parameters: parametersSchema,
