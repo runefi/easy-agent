@@ -1,8 +1,9 @@
-# only openrouter now
+# openrouter api key
 [model]
 api_key = ""
 name = "deepseek/deepseek-chat"
 
+# if you need use langfuse
 [langfuse]
 enabled = false
 secretKey = ""
