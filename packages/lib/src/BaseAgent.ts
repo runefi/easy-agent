@@ -38,7 +38,7 @@ export function action<T extends ZodRawShape>(description: string, parametersSch
 export abstract class BaseAgent {
   public abstract name: string;
 
-  public async setup() { };
+  public async setup(context: any, parameters: any) { };
 
   public toTools() {
     const tools: { [key: string]: any } = {};

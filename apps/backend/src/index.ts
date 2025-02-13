@@ -1,43 +1,25 @@
-import { createDataStream, streamText, wrapLanguageModel } from 'ai';
-import { Hono } from 'hono'
-import { stream } from "hono/streaming"
-import { cors } from 'hono/cors';
+import { PythFetcherAgent } from '@easyagent/pyth-fetcher';
 import { serve } from '@hono/node-server';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import c = require('config');
-import { PythFetcherAgent } from '@easyagent/pyth-fetcher';
+import { createDataStream, streamText } from 'ai';
 import { config } from 'dotenv';
-import { LangfuseExporter } from 'langfuse-vercel';
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { stream } from "hono/streaming";
+import { initTrace } from './trace';
+import c = require('config');
 
 config();
 
 const app = new Hono()
 app.use('*', cors());
+initTrace();
 
 const openrouter = createOpenRouter({
   apiKey: c.get('model.api_key'),
 })
 
 let model = openrouter.chat(c.get('model.name'))
-
-let sdk: NodeSDK | undefined;
-if (c.get('langfuse.enabled')) {
-  sdk = new NodeSDK({
-    traceExporter: new LangfuseExporter(
-      {
-        secretKey: c.get('langfuse.secretKey'),
-        publicKey: c.get('langfuse.publicKey'),
-        baseUrl: c.get('langfuse.baseUrl'),
-      }
-    ),
-    instrumentations: [getNodeAutoInstrumentations()],
-  });
-
-  sdk.start();
-  console.log('langfuse started');
-}
 
 const pythAgent = new PythFetcherAgent()
 
@@ -83,11 +65,3 @@ serve({
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`);
 });
-
-const shutdownHandler = (signal: string) => {
-  sdk?.shutdown();
-  process.exit(0);
-};
-
-process.on('SIGINT', () => shutdownHandler('SIGINT'));
-process.on('SIGTERM', () => shutdownHandler('SIGTERM'));

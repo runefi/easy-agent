@@ -7,6 +7,10 @@ import { GetPricesParameters, GetPricesResult, GetPricesParametersSchema } from 
  */
 export class PythFetcherAgent extends BaseAgent {
   public name = "pyth-fetcher"
+  
+  public async setup() {
+
+  }
 
   @action("Fetch price data from Pyth", GetPricesParametersSchema)
   public async get_prices(parameters: GetPricesParameters): Promise<GetPricesResult> {
@@ -21,3 +25,5 @@ export class PythFetcherAgent extends BaseAgent {
     return data
   }
 }
+
+export default PythFetcherAgent

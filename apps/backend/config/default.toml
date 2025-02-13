@@ -9,3 +9,6 @@ enabled = false
 secretKey = ""
 publicKey = ""
 baseUrl = ""
+
+[plugins]
+"@easyagent/pyth-fetcher" = { }
