@@ -1,5 +1,5 @@
 import { ids } from "./ids"
-import { action, BaseAgent } from "@easyagent/lib"
+import { action, BaseAgent, sleep } from "@easyagent/lib"
 import { GetPricesParameters, GetPricesResult, GetPricesParametersSchema } from "./types"
 
 /**

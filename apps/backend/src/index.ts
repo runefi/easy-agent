@@ -39,7 +39,6 @@ if (c.get('langfuse.enabled')) {
   console.log('langfuse started');
 }
 
-
 const pythAgent = new PythFetcherAgent()
 
 app.post('/stream-data', async c => {
@@ -47,17 +46,15 @@ app.post('/stream-data', async c => {
   // immediately start streaming the response
   const dataStream = createDataStream({
     execute: async dataStreamWriter => {
-      dataStreamWriter.writeData('initialized call');
-
-      // 实际的计算逻辑
       const result = streamText({
         model,
         messages,
         tools: {
           ...pythAgent.toTools(),
         },
-        experimental_telemetry:{
-          isEnabled:true
+        toolCallStreaming: true,
+        experimental_telemetry: {
+          isEnabled: true
         }
       });
 
