@@ -1,16 +1,12 @@
+import { action, BaseAgent } from "@easyagent/lib"
 import { ids } from "./ids"
-import { action, BaseAgent, sleep } from "@easyagent/lib"
-import { GetPricesParameters, GetPricesResult, GetPricesParametersSchema } from "./types"
+import { GetPricesParameters, GetPricesParametersSchema, GetPricesResult, PythPricesResult } from "./types"
 
 /**
  * Agent to fetch price data from Pyth
  */
 export class PythFetcherAgent extends BaseAgent {
   public name = "pyth-fetcher"
-  
-  public async setup() {
-
-  }
 
   @action("Fetch price data from Pyth", GetPricesParametersSchema)
   public async get_prices(parameters: GetPricesParameters): Promise<GetPricesResult> {
@@ -20,10 +16,19 @@ export class PythFetcherAgent extends BaseAgent {
     }
 
     const res = await fetch("https://hermes.pyth.network/v2/updates/price/latest?" + params.toString())
-    const data: GetPricesResult = await res.json()
+    const data: PythPricesResult = await res.json()
+    // 处理一下数据，AI的计算能力很弱，所以最好是帮他计算好需要的内容。
+    const result = data.parsed.map(item => ({
+      name: ids.find(id => id.priceFeedId.includes(item.id))!.assetSymbol,
+      price: adjustPrice(item.price.price, item.price.expo)
+    }))
 
-    return data
+    return result;
   }
 }
 
-export default PythFetcherAgent
+function adjustPrice(price: string, expo: number) {
+  if (expo >= 0) return price + '0'.repeat(expo);
+  const insertAt = price.length + expo;
+  return price.slice(0, insertAt) + '.' + price.slice(insertAt);
+}
