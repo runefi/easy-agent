@@ -8,7 +8,8 @@ EasyAgent是一个简单而又强大的Agent框架。该框架主要是用于演
 - [ ] Session功能和持久储存  
 - [ ] Prompt的管理，选择  
 - [ ] Memory功能  
-- [ ] RAG数据功能  
+- [ ] RAG数据功能
+- [ ] MCP
 - [ ] 多Agent合作  
 - [ ] Swarm，Agent调度  
 
