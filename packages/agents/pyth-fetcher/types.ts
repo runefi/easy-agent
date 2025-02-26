@@ -34,7 +34,7 @@ export type GetPricesResult= {
 }[]
 
 export const GetPricesParametersSchema = z.object({
-  symbols: z.array(z.enum(names)),
+  symbols: z.array(z.enum(names)).describe("An array of asset symbols to fetch prices for"),
 })
 
 export type GetPricesParameters = z.infer<typeof GetPricesParametersSchema>
