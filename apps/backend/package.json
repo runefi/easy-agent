@@ -12,6 +12,7 @@
   "dependencies": {
     "@easyagent/lib": "workspace:*",
     "@easyagent/pyth-fetcher": "workspace:*",
+    "@easyagent/thinking": "workspace:*",
     "@hono/node-server": "^1.4.0",
     "@openrouter/ai-sdk-provider": "^0.2.1",
     "@opentelemetry/auto-instrumentations-node": "^0.56.0",

@@ -1,7 +1,6 @@
 {
-  "name": "@easyagent/pyth-fetcher",
-  "version": "0.0.1",
-  "types": "dist/index.d.ts",
+  "name": "@easyagent/thinking",
+  "version": "1.0.0",
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -11,6 +10,7 @@
     "@easyagent/lib": "workspace:*",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.1",
+    "ai": "^4.1.46",
     "zod": "^3.24.1"
   },
   "devDependencies": {

@@ -6,9 +6,11 @@ import { LangfuseExporter } from "langfuse-vercel";
 export function initTrace() {
   let sdk: NodeSDK | undefined;
   if (c.get('langfuse.enabled')) {
+
     sdk = new NodeSDK({
       traceExporter: new LangfuseExporter(
         {
+          debug: true,
           secretKey: c.get('langfuse.secretKey'),
           publicKey: c.get('langfuse.publicKey'),
           baseUrl: c.get('langfuse.baseUrl'),
@@ -28,4 +30,8 @@ export function initTrace() {
 
   process.on('SIGINT', () => shutdownHandler('SIGINT'));
   process.on('SIGTERM', () => shutdownHandler('SIGTERM'))
+}
+
+export function getLangfuse() {
+  return LangfuseExporter.langfuse
 }

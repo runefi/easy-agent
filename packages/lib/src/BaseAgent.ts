@@ -1,7 +1,9 @@
 import { ZodObject, ZodRawShape, z } from "zod"
 import { tool } from "ai"
+import { hookSystem } from "./HookSystem";
+import { World } from "./World";
 
-export function action<T extends ZodRawShape>(description: string, parametersSchema: ZodObject<T>) {
+export function action<T extends ZodRawShape>(description: string, parametersSchema?: ZodObject<T>) {
   return function (
     target: any,
     context: ClassMethodDecoratorContext<any, any>
@@ -13,8 +15,8 @@ export function action<T extends ZodRawShape>(description: string, parametersSch
 
     // Replace the original method with a wrapped version that includes validation
     function replacementMethod(this: any, ...args: any[]) {
-      // Validate parameters using Zod
-      const validatedParams = parametersSchema.parse(args[0]);
+      // Validate parameters using Zod if schema exists and args are provided
+      const validatedParams = args.length && parametersSchema ? parametersSchema.parse(args[0]) : undefined;
       return originalMethod.call(this, validatedParams);
     }
 
@@ -37,8 +39,22 @@ export function action<T extends ZodRawShape>(description: string, parametersSch
 
 export abstract class BaseAgent {
   public abstract name: string;
+  constructor(public world: World) {}
 
-  public async setup(context: any, parameters: any) { };
+  public async setup(context: any, parameters: any) {};
+  
+  get hooks(){
+    return hookSystem
+  }
+  
+  /**
+   * Register tools built by this agent
+   */
+  public registerTools() {
+    hookSystem.register('onToolBuild', (tools, context) => {
+      return Object.assign(tools, this.toTools())
+    })
+  }
 
   public toTools() {
     const tools: { [key: string]: any } = {};
