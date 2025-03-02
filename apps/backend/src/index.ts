@@ -22,11 +22,11 @@ const openrouter = createOpenRouter({
   apiKey: c.get('model.api_key'),
 })
 
-let model = wrapLanguageModel({
-  model: openrouter.chat(c.get('model.name')),
-  middleware: LoggingMiddleware,
-})
-
+// let model = wrapLanguageModel({
+//   model: openrouter.chat(c.get('model.name')),
+//   middleware: LoggingMiddleware,
+// })
+let model = openrouter.chat(c.get('model.name'))
 
 const world = new World(model)
 // const pythAgent = new PythFetcherAgent(world)
@@ -35,31 +35,31 @@ const thinkingAgent = new ThinkingAgent(world)
 thinkingAgent.setup({}, {})
 
 app.post('/stream-data', async c => {
-  const parentTraceId = generateId();
+  const { messages, id } = await c.req.json()
 
+  if (!id) {
+    throw new Error('id is required')
+  }
+
+  const traceID = id;
   getLangfuse()?.trace({
-    id: parentTraceId,
-    name: 'stream-data',
+    id: traceID,
+    name: 'chat',
   });
-
-  const systemPrompt = hookSystem.run('onSystemPromptBuild', "你是一个智能助手。你当前的对话ID为：" + parentTraceId + "。", {
+  const systemPrompt = hookSystem.run('onSystemPromptBuild', `You're an intelligent assistant.Note that your output will be presented by the markdown parser, so be careful when you output.\n`, {
     model,
-    traceId: parentTraceId,
+    traceID: traceID,
   })
 
   const tools = hookSystem.run('onToolBuild', {}, {
     model,
-    traceId: parentTraceId,
+    traceID: traceID,
   })
 
-  const { messages } = await c.req.json()
-  const onEnd = () => {
-    world.removeArea(parentTraceId)
-  }
   // immediately start streaming the response
   const dataStream = createDataStream({
     execute: async dataStreamWriter => {
-      const area = world.getArea(parentTraceId)
+      const area = world.getArea(traceID)
 
       area.content = {
         model,
@@ -70,17 +70,15 @@ app.post('/stream-data', async c => {
         experimental_telemetry: {
           isEnabled: true,
           metadata: {
-            langfuseTraceId: parentTraceId,
+            langfuseTraceId: traceID,
             langfuseUpdateParent: false,
           }
         },
-        onFinish: onEnd
+        onFinish: () => world.removeArea(traceID)
       }
 
       const result = streamText(area.content);
-
       result.mergeIntoDataStream(dataStreamWriter);
-
       getLangfuse()?.flushAsync();
     },
     onError: error => {

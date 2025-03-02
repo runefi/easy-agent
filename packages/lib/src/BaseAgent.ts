@@ -1,9 +1,19 @@
 import { ZodObject, ZodRawShape, z } from "zod"
-import { tool } from "ai"
+import type { ToolInvocation } from "@ai-sdk/ui-utils";
+import { Tool, tool } from "ai"
 import { hookSystem } from "./HookSystem";
 import { World } from "./World";
+import React from "react";
 
-export function action<T extends ZodRawShape>(description: string, parametersSchema?: ZodObject<T>) {
+export type AdditionalContext = {
+  traceID: string,
+}
+
+export function action<T extends ZodRawShape>(description: string, context: {
+  parametersSchema?: ZodObject<T>
+} = {}) {
+  let { parametersSchema } = context
+  parametersSchema = parametersSchema || z.object({} as T).describe("not needed")
   return function (
     target: any,
     context: ClassMethodDecoratorContext<any, any>
@@ -16,8 +26,8 @@ export function action<T extends ZodRawShape>(description: string, parametersSch
     // Replace the original method with a wrapped version that includes validation
     function replacementMethod(this: any, ...args: any[]) {
       // Validate parameters using Zod if schema exists and args are provided
-      const validatedParams = args.length && parametersSchema ? parametersSchema.parse(args[0]) : undefined;
-      return originalMethod.call(this, validatedParams);
+      args.length && parametersSchema ? parametersSchema.parse(args[0]) : undefined;
+      return originalMethod.call(this, ...args);
     }
 
     // Store metadata about the action
@@ -25,7 +35,7 @@ export function action<T extends ZodRawShape>(description: string, parametersSch
       if (!this.__actions) {
         this.__actions = new Map();
       }
-      
+
       this.__actions.set(context.name.toString(), {
         description,
         parametersSchema,
@@ -38,39 +48,49 @@ export function action<T extends ZodRawShape>(description: string, parametersSch
 }
 
 export abstract class BaseAgent {
-  public abstract name: string;
-  constructor(public world: World) {}
+  public static AgentName: string = "unknown";
+  constructor(public world: World) { }
+  public static InterfaceList: Record<string, React.ComponentType<{ invocation: ToolInvocation }>> = {};
 
-  public async setup(context: any, parameters: any) {};
-  
-  get hooks(){
+  public async setup(context: any, parameters: any) { };
+
+  get hooks() {
     return hookSystem
   }
-  
+
   /**
    * Register tools built by this agent
    */
   public registerTools() {
     hookSystem.register('onToolBuild', (tools, context) => {
-      return Object.assign(tools, this.toTools())
+      return Object.assign(tools, this.toTools(context.traceID))
     })
   }
 
-  public toTools() {
+  public toTools(traceID: string) {
     const tools: { [key: string]: any } = {};
     const actions: Map<string, { description: string, parametersSchema: ZodObject<any>, method: any }> = (this as any).__actions;
+    const self = this
+
+    // @ts-ignore
+    const AgentName = this.constructor.AgentName
 
     // Filter for methods that are marked as actions
     for (const [name, { description, parametersSchema, method }] of actions.entries()) {
       if (typeof method === 'function') {
-        tools[`${this.name}-${name}`] = tool({
+        tools[`${AgentName}-${name}`] = tool({
           description,
           parameters: parametersSchema,
-          execute: method.bind(this),
+          execute: (args, context) => {
+            return method.call(self, args, context, {
+              traceID
+            });
+          },
         });
       }
     }
 
     return tools;
   }
+
 }

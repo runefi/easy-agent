@@ -4,7 +4,7 @@ const debug = require('debug')('hookSystem')
 
 export type hookFn<T, R> = (object: R, args: T) => R
 
-export type ModelContent = { model: LanguageModel, traceId: string }
+export type ModelContent = { model: LanguageModel, traceID: string }
 
 // 定义所有钩子及其类型
 export interface Hooks {

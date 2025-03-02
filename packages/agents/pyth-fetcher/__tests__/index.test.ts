@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { PythFetcherAgent } from '../index';
+import { PythFetcherAgent } from '../src/index';
 
 describe('PythFetcherAgent', () => {
   let agent: PythFetcherAgent;

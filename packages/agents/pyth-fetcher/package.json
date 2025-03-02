@@ -2,6 +2,7 @@
   "name": "@easyagent/pyth-fetcher",
   "version": "0.0.1",
   "types": "dist/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",

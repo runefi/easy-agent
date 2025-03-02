@@ -1,18 +1,18 @@
 import { action, BaseAgent } from "@easyagent/lib"
 import { ids } from "./ids"
-import { GetPricesParameters, GetPricesParametersSchema, GetPricesResult, PythPricesResult } from "./types"
+import { GetPricesParameters, GetPricesParametersSchema, GetPricesResult, PythPricesResult } from "../types"
 
 /**
  * Agent to fetch price data from Pyth
  */
 export class PythFetcherAgent extends BaseAgent {
-  public name = "pyth-fetcher"
-  
+  public static override name = "pyth-fetcher"
+
   public async setup(context: any, parameters: any): Promise<void> {
     this.registerTools()
   }
 
-  @action("Fetch price data from Pyth", GetPricesParametersSchema)
+  @action("Fetch price data from Pyth", { parametersSchema: GetPricesParametersSchema })
   public async get_prices(parameters: GetPricesParameters): Promise<GetPricesResult> {
     const params = new URLSearchParams()
     for (const symbol of parameters.symbols) {
@@ -36,3 +36,5 @@ function adjustPrice(price: string, expo: number) {
   const insertAt = price.length + expo;
   return price.slice(0, insertAt) + '.' + price.slice(insertAt);
 }
+
+export default PythFetcherAgent

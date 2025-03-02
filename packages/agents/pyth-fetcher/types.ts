@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { names } from "./ids"
+import { names } from "./src/ids"
 
 export type PythPricesResult = {
   binary: {

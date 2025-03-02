@@ -3,7 +3,9 @@ import { Button } from "@easyagent/ui/components/button";
 import TextareaAutosize from "react-textarea-autosize";
 import clsx from "clsx";
 import { useChat } from "@ai-sdk/react";
-import { UIMessage } from "@ai-sdk/ui-utils";
+import { ToolInvocationUIPart, UIMessage } from "@ai-sdk/ui-utils";
+import { EAMarkdown } from "@easyagent/ui/components/ea-markdown";
+import { pluginInterfaces } from "../../backend/config/plugin";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -38,20 +40,46 @@ export default function App() {
 function MessageList({
   messages,
 }: React.PropsWithoutRef<{ messages: UIMessage[] }>) {
+  console.log(messages);
   return (
     <>
       {messages.map((msg, index) => (
         <div key={index} className="max-w-3xl mx-auto w-full mb-2">
           <div
-            className={clsx("rounded-xl p-2 px-3 w-fit", {
+            className={clsx("rounded-xl p-2 px-3 w-fit flex flex-col gap-2", {
               "bg-black text-white float-right": msg.role === "user",
               "": msg.role === "assistant",
             })}
           >
-            {msg.content}
+            {msg.parts.map((part, index) => (
+              <PartMessage key={index} part={part} />
+            ))}
           </div>
         </div>
       ))}
     </>
   );
+}
+
+type Parts = UIMessage["parts"][0];
+
+function PartMessage({ part }: { part: Parts }) {
+  switch (part.type) {
+    case "text":
+      return <EAMarkdown>{part.text}</EAMarkdown>;
+    case "tool-invocation":
+      return <ToolInvocation part={part} />;
+  }
+}
+
+function ToolInvocation({ part }: { part: ToolInvocationUIPart }) {
+  const toolName = part.toolInvocation.toolName;
+  console.log("list",pluginInterfaces)
+  const Component = pluginInterfaces[toolName];
+
+  if (Component) {
+    return <Component invocation={part.toolInvocation} />;
+  }
+
+  return <div>Tool: {toolName}</div>;
 }

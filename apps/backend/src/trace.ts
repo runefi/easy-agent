@@ -10,7 +10,7 @@ export function initTrace() {
     sdk = new NodeSDK({
       traceExporter: new LangfuseExporter(
         {
-          debug: true,
+          // debug: true,
           secretKey: c.get('langfuse.secretKey'),
           publicKey: c.get('langfuse.publicKey'),
           baseUrl: c.get('langfuse.baseUrl'),
