@@ -1,7 +1,6 @@
 {
   "name": "@easyagent/pyth-fetcher",
   "version": "0.0.1",
-  "types": "dist/index.d.ts",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
