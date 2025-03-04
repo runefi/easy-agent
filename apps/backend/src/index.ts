@@ -11,6 +11,7 @@ import { getLangfuse, initTrace } from './trace';
 import c = require('config');
 import { LoggingMiddleware } from './middlewares/Logging';
 import { hookSystem, World } from '@easyagent/lib';
+import { plugins } from '../config/plugin';
 
 config();
 
@@ -29,10 +30,13 @@ const openrouter = createOpenRouter({
 let model = openrouter.chat(c.get('model.name'))
 
 const world = new World(model)
-// const pythAgent = new PythFetcherAgent(world)
-// pythAgent.setup({}, {})
-const thinkingAgent = new ThinkingAgent(world)
-thinkingAgent.setup({}, {})
+// init agent
+for(const agent of plugins){
+  const a = new agent(world)
+  a.setup({}, {})
+  console.log("registered", agent.AgentName)
+}
+
 
 app.post('/stream-data', async c => {
   const { messages, id } = await c.req.json()

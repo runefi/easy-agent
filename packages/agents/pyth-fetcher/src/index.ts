@@ -6,7 +6,7 @@ import { GetPricesParameters, GetPricesParametersSchema, GetPricesResult, PythPr
  * Agent to fetch price data from Pyth
  */
 export class PythFetcherAgent extends BaseAgent {
-  public static override name = "pyth-fetcher"
+  public static override AgentName = "pyth-fetcher"
 
   public async setup(context: any, parameters: any): Promise<void> {
     this.registerTools()
