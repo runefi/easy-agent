@@ -1,11 +1,6 @@
 import { action, AdditionalContext, BaseAgent, messagesToLines, World } from "@easyagent/lib"
 import { generateText, ToolExecutionOptions } from "ai"
-import { z } from "zod"
 import { Thinking } from "./components/ui-thinking"
-
-export const ParametersSchema = z.object({
-  uuid: z.string().describe("你当前的对话ID"),
-})
 
 export class ThinkingAgent extends BaseAgent {
   static override AgentName = "thinking"
