@@ -21,6 +21,6 @@
     "packages/*"
   ],
   "dependencies": {
-    "ai": "^4.1.47"
+    "ai":"^4.3.3"
   }
 }

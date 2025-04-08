@@ -38,6 +38,7 @@ for(const agent of plugins){
 
 app.post('/stream-data', async c => {
   const { messages, id } = await c.req.json()
+ 
 
   if (!id) {
     throw new Error('id is required')
@@ -53,6 +54,8 @@ app.post('/stream-data', async c => {
     traceID: traceID,
   })
 
+  console.log("traceID",traceID)
+
   const tools = hookSystem.run('onToolBuild', {}, {
     model,
     traceID: traceID,
@@ -67,10 +70,10 @@ app.post('/stream-data', async c => {
         model,
         system: systemPrompt,
         messages,
-        tools,
+        // tools,
         // toolCallStreaming: true,
         experimental_telemetry: {
-          isEnabled: true,
+          isEnabled: false,
           metadata: {
             langfuseTraceId: traceID,
             langfuseUpdateParent: false,
