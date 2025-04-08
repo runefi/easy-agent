@@ -4,3 +4,6 @@ dist
 */config/*
 .turbo
 apps/backend/config/default.toml
+apps/backend/.DS_Store
+apps/frontend/.DS_Store
+apps/frontend/node_modules
