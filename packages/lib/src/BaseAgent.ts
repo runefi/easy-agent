@@ -8,16 +8,18 @@ import React from "react";
 export type AdditionalContext = {
   traceID: string,
 }
-
+// 函数返回一个装饰器函数，用于在类方法上添加动作，并将这些动作转换为工具供AI调用
 export function action<T extends ZodRawShape>(description: string, context: {
   parametersSchema?: ZodObject<T>
 } = {}) {
   let { parametersSchema } = context
   parametersSchema = parametersSchema || z.object({} as T).describe("not needed")
+  // Return a decorator function
   return function (
     target: any,
     context: ClassMethodDecoratorContext<any, any>
   ) {
+    //确保装饰器只能用于method
     const originalMethod = context.kind === 'method' ? target : undefined;
     if (!originalMethod) {
       throw new Error('@action can only be used on methods');
@@ -50,9 +52,13 @@ export function action<T extends ZodRawShape>(description: string, context: {
 export abstract class BaseAgent {
   public static AgentName: string = "unknown";
   constructor(public world: World) { }
-  public static InterfaceList: Record<string, React.ComponentType<{ invocation: ToolInvocation }>> = {};
+  public static InterfaceList: Record<string, React.ComponentType<{ invocation: ToolInvocation }>> = {
+    // todo
+  };
 
-  public async setup(context: any, parameters: any) { };
+  public async setup(context: any, parameters: any) {
+    // todo
+  };
 
   get hooks() {
     return hookSystem
@@ -67,6 +73,7 @@ export abstract class BaseAgent {
     })
   }
 
+  // action 装饰器的核心作用是将类方法自动转换为符合 `Tool` 接口的工具对象
   public toTools(traceID: string) {
     const tools: { [key: string]: any } = {};
     const actions: Map<string, { description: string, parametersSchema: ZodObject<any>, method: any }> = (this as any).__actions;

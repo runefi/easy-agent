@@ -30,6 +30,13 @@ export default function App() {
             placeholder="Type your message..."
             value={input}
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              // 添加回车键+shift提交支持
+              if (e.key === 'Enter' && e.shiftKey) {
+                e.preventDefault()
+                handleSubmit(e)
+              }
+            }}
           />
           <Button type="submit">Send</Button>
         </form>
@@ -37,6 +44,7 @@ export default function App() {
     </div>
   );
 }
+//
 function MessageList({
   messages,
 }: React.PropsWithoutRef<{ messages: UIMessage[] }>) {
@@ -45,8 +53,7 @@ function MessageList({
     <>
       {messages.map((msg, index) => (
         <div key={index} className="max-w-3xl mx-auto w-full mb-2">
-          <div
-            className={clsx("rounded-xl p-2 px-3 w-fit flex flex-col gap-2", {
+          <div className={clsx("rounded-xl p-2 px-3 w-fit flex flex-col gap-2", {
               "bg-black text-white float-right": msg.role === "user",
               "": msg.role === "assistant",
             })}
