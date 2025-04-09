@@ -19,7 +19,7 @@ export default function App() {
     <div className="flex flex-1 flex-col gap-4 p-4 min-h-screen">
       {/* Message display area */}
       <div className="flex-1 p-8 container flex flex-col mx-auto">
-        <MessageList messages={messages} />
+        {messages.length > 0 && <MessageList messages={messages} />}
       </div>
 
       {/* Input area */}
@@ -32,9 +32,9 @@ export default function App() {
             onChange={handleInputChange}
             onKeyDown={(e) => {
               // 添加回车键+shift提交支持
-              if (e.key === 'Enter' && e.shiftKey) {
-                e.preventDefault()
-                handleSubmit(e)
+              if (e.key === "Enter" && e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
               }
             }}
           />
@@ -48,12 +48,15 @@ export default function App() {
 function MessageList({
   messages,
 }: React.PropsWithoutRef<{ messages: UIMessage[] }>) {
-  console.log(messages);
+  messages.length > 0
+    ? console.log(messages[0].id, messages)
+    : console.log("messages is empty");
   return (
     <>
-      {messages.map((msg, index) => (
-        <div key={index} className="max-w-3xl mx-auto w-full mb-2">
-          <div className={clsx("rounded-xl p-2 px-3 w-fit flex flex-col gap-2", {
+      {messages.map((msg) => (
+        <div key={msg.id} className="max-w-3xl mx-auto w-full mb-2">
+          <div
+            className={clsx("rounded-xl p-2 px-3 w-fit flex flex-col gap-2", {
               "bg-black text-white float-right": msg.role === "user",
               "": msg.role === "assistant",
             })}
@@ -65,6 +68,41 @@ function MessageList({
         </div>
       ))}
     </>
+  );
+}
+
+function MessageList1({
+  messages,
+}: React.PropsWithoutRef<{ messages: UIMessage[] }>) {
+  messages.length > 0
+    ? console.log(messages[0].id, messages)
+    : console.log("messages is empty");
+  return (
+    <div>
+      {messages.map((message) => (
+        <div key={message.id}>
+          {message.role === "user" ? "User: " : "AI: "}
+          {message.parts
+            .filter((part) => part.type !== "source")
+            .map((part, index) => {
+              if (part.type === "text") {
+                return <div key={index}>{part.text}</div>;
+              }
+            })}
+          {message.parts
+            .filter((part) => part.type === "source")
+            .map((part) => (
+              <span key={`source-${part.source.id}`}>
+                [
+                <a href={part.source.url} target="_blank">
+                  {part.source.title ?? new URL(part.source.url).hostname}
+                </a>
+                ]
+              </span>
+            ))}
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -81,7 +119,7 @@ function PartMessage({ part }: { part: Parts }) {
 
 function ToolInvocation({ part }: { part: ToolInvocationUIPart }) {
   const toolName = part.toolInvocation.toolName;
-  console.log("list",pluginInterfaces)
+  console.log("list", pluginInterfaces);
   const Component = pluginInterfaces[toolName];
 
   if (Component) {

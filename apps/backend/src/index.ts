@@ -21,11 +21,11 @@ const openrouter = createOpenRouter({
   apiKey: c.get('model.api_key'),
 })
 
-// let model = wrapLanguageModel({
-//   model: openrouter.chat(c.get('model.name')),
-//   middleware: LoggingMiddleware,
-// })
-let model = openrouter.chat(c.get('model.name'))
+let model = wrapLanguageModel({
+  model: openrouter.chat(c.get('model.name')),
+  middleware: LoggingMiddleware,
+})
+// let model = openrouter.chat(c.get('model.name'))
 
 const world = new World(model)
 // init agent

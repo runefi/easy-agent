@@ -10,7 +10,7 @@
     "ui:add": "pnpm --filter @easyagent/ui ui:add"
   },
   "devDependencies": {
-    "turbo": "latest"
+    "turbo": "^2.5.0"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
