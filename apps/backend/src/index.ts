@@ -49,12 +49,12 @@ app.post('/stream-data', async c => {
     id: traceID,
     name: 'chat',
   });
-  const systemPrompt = hookSystem.run('onSystemPromptBuild', `You're an intelligent assistant.Note that your output will be presented by the markdown parser, so be careful when you output.\n`, {
+  const systemPrompt = hookSystem.run('onSystemPromptBuild', `You're an intelligent assistant.Note that your output will be presented by the markdown parser, so be careful when you output.\n `, {
     model,
     traceID: traceID,
   })
 
-  console.log("traceID",traceID)
+  // console.log("traceID",traceID)
 
   const tools = hookSystem.run('onToolBuild', {}, {
     model,
@@ -64,9 +64,8 @@ app.post('/stream-data', async c => {
   // immediately start streaming the response
   const dataStream = createDataStream({
     execute: async dataStreamWriter => {
-      const area = world.getArea(traceID)
-
-      area.content = {
+      const area = world.getArea(traceID) 
+      let streamParams = {
         model,
         system: systemPrompt,
         messages,
@@ -80,9 +79,9 @@ app.post('/stream-data', async c => {
           }
         },
         onFinish: () => world.removeArea(traceID)
-      }
-
-      const result = streamText(area.content);
+      }  
+      area.content = streamParams
+      const result = streamText(streamParams);
       result.mergeIntoDataStream(dataStreamWriter);
       getLangfuse()?.flushAsync();
     },
