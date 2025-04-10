@@ -1,12 +1,12 @@
 # openrouter api key
 [model]
-api_key = "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"
+api_key = "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"
 name = "deepseek/deepseek-chat"
 
 # if you need use langfuse
 [langfuse]
 enabled = true
-secretKey = "sk-lf-253b0613-d241-431b-bf8e-7ed44087cce0"
+secretKey = "sk-lf-253b0613-d241-431b-bf8e-7ed44087cce1"
 publicKey = "pk-lf-91ad8a52-d8d3-420e-84e7-e2bf1283a03b"
 baseUrl = "https://ops.txdev.cn"
 
