@@ -10,9 +10,10 @@
     "ui:add": "pnpm --filter @easyagent/ui ui:add"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "turbo": "^2.5.0"
   },
-  "packageManager": "pnpm@8.9.0",
+  "packageManager": "pnpm@10.8.0",
   "engines": {
     "node": ">=18"
   },
@@ -21,6 +22,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "ai":"^4.3.3"
+    "@types/jest": "^29.5.14",
+    "ai": "^4.3.4"
   }
 }

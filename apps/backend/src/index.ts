@@ -69,8 +69,8 @@ app.post('/stream-data', async c => {
         model,
         system: systemPrompt,
         messages,
-        // tools,
-        // toolCallStreaming: true,
+        tools,
+        toolCallStreaming: true,
         experimental_telemetry: {
           isEnabled: false,
           metadata: {

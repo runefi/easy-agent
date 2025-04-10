@@ -51,7 +51,9 @@ export function action<T extends ZodRawShape>(description: string, context: {
 
 export abstract class BaseAgent {
   public static AgentName: string = "unknown";
-  constructor(public world: World) { }
+  constructor(public world: World) {
+    // todo
+  }
   public static InterfaceList: Record<string, React.ComponentType<{ invocation: ToolInvocation }>> = {
     // todo
   };
